@@ -53,4 +53,3 @@ It's much easier to generate the structs from the yaml used to create the docume
 
 ### Issues
 - Device and Availability structs are hard coded and defined in [hassdiscovery.go](./hassdiscovery.go).
-- humidifier - has an error in the yaml defining the structure. Using an edited local copy for generating the humidifier struct.

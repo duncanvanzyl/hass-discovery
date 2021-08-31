@@ -7,8 +7,7 @@ package discovery
 //go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/device_tracker.mqtt.markdown
 //go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/device_trigger.mqtt.markdown
 //go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/fan.mqtt.markdown
-// There is an error in the source for "humidifier.mqtt.markdown" that prevents unmarshalling. For now just use the downloaded version.
-//go:generate go run generator.go humidifier.mqtt.markdown
+//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/humidifier.mqtt.markdown
 //go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/climate.mqtt.markdown
 //go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/light.mqtt.markdown
 //go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/lock.mqtt.markdown

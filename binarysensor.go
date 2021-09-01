@@ -1,5 +1,7 @@
 package discovery
 
+import "fmt"
+
 type BinarySensor struct {
 
 	// A list of MQTT topics subscribed to receive availability (online/offline) updates. Must not be used together with `availability_topic`
@@ -85,4 +87,23 @@ type BinarySensor struct {
 	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) that returns a string to be compared to `payload_on`/`payload_off` or an empty string, in which case the MQTT message will be removed. Available variables: `entity_id`. Remove this option when 'payload_on' and 'payload_off' are sufficient to match your payloads (i.e no pre-processing of original message is required)
 	// Default: <no value>
 	ValueTemplate string `json:"value_template,omitempty"`
+}
+
+// AnnounceTopic returns the topic to announce the discoverable BinarySensor
+// Topic has the format below:
+//   <discovery_prefix>/<component>/<object_id>/config
+// 'object_id' is either the UniqueId, the Name, or a hash of the BinarySensor
+func (d *BinarySensor) AnnounceTopic(prefix string) string {
+	topicFormat := "%s/binary_sensor/%s/config"
+	objectID := ""
+	switch {
+	case d.UniqueId != "":
+		objectID = d.UniqueId
+	case d.Name != "":
+		objectID = d.Name
+	default:
+		objectID = hash(d)
+	}
+
+	return fmt.Sprintf(topicFormat, prefix, objectID)
 }

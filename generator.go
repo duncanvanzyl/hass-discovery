@@ -40,6 +40,7 @@ type {{.Name | convertKey}} struct {
 	{{$key | convertKey}} {{$value | getType}} ` + "`json:\"{{$key}}{{if not $value.Required}},omitempty{{end}}\"`" + `
 	{{end}}
 }
+
 `
 
 func inList(s string, l []interface{}) bool {
@@ -129,6 +130,12 @@ func getBytes(src string) ([]byte, error) {
 	return ioutil.ReadFile(src)
 }
 
+type templateData struct {
+	Name    string
+	RawName string
+	Data    map[string]*entry
+}
+
 func readYAML(url string) error {
 	bs, err := getBytes(url)
 	if err != nil {
@@ -150,15 +157,12 @@ func readYAML(url string) error {
 		m[k].name = k
 	}
 
+	s := templateData{Data: m}
+
 	su := strings.Split(url, "/")
 	fn := su[len(su)-1]
-	name := strings.TrimSuffix(fn, ".mqtt.markdown")
-	name = convertKey(name)
-
-	s := struct {
-		Name string
-		Data map[string]*entry
-	}{Name: name, Data: m}
+	s.RawName = strings.TrimSuffix(fn, ".mqtt.markdown")
+	s.Name = convertKey(s.RawName)
 
 	funcMap := template.FuncMap{
 		"convertKey": convertKey,
@@ -166,24 +170,38 @@ func readYAML(url string) error {
 		"comment":    comment,
 	}
 
-	t, err := template.New("discoverable").Funcs(funcMap).Parse(discTemplate)
+	t, err := template.New("").Funcs(funcMap).ParseGlob("templates/*.tmpl")
 	if err != nil {
 		return fmt.Errorf("could not create template: %v", err)
 	}
 
 	dbs := &bytes.Buffer{}
-	err = t.Execute(dbs, s)
+	err = t.ExecuteTemplate(dbs, "discoverable.tmpl", s)
 	if err != nil {
 		return fmt.Errorf("could not execute template: %v", err)
 	}
 
-	fbs, err := format.Source(dbs.Bytes())
+	output := dbs.Bytes()
+
+	tid := "topicwithoutuniqueid.tmpl"
+	if _, ok := s.Data["unique_id"]; ok {
+		tid = "topicwithuniqueid.tmpl"
+	}
+
+	tbs := &bytes.Buffer{}
+	err = t.ExecuteTemplate(tbs, tid, s)
 	if err != nil {
-		fmt.Printf("%s\n", dbs)
+		return fmt.Errorf("could not execute template: %v", err)
+	}
+	output = append(output, tbs.Bytes()...)
+
+	fbs, err := format.Source(output)
+	if err != nil {
+		fmt.Printf("%s\n", output)
 		return fmt.Errorf("could not format output: %v", err)
 	}
 
-	filename := strings.ToLower(name) + ".go"
+	filename := strings.ToLower(s.Name) + ".go"
 	err = ioutil.WriteFile(filename, fbs, 0664)
 	if err != nil {
 		return fmt.Errorf("could not write file: %v", err)

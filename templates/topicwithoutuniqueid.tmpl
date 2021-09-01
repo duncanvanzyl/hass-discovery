@@ -1,0 +1,10 @@
+// AnnounceTopic returns the topic to announce the discoverable {{.Name}}
+// Topic has the format below:
+//   <discovery_prefix>/<component>/<object_id>/config
+// 'object_id' is either the UniqueId, the Name, or a hash of the {{.Name}}
+func (d *{{.Name}}) AnnounceTopic(prefix string) string {
+  topicFormat := "%s/{{.RawName}}/%s/config"
+  objectID := hash(d)
+
+  return fmt.Sprintf(topicFormat, prefix, objectID)
+}

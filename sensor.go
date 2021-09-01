@@ -1,5 +1,7 @@
 package discovery
 
+import "fmt"
+
 type Sensor struct {
 
 	// A list of MQTT topics subscribed to receive availability (online/offline) updates. Must not be used together with `availability_topic`
@@ -46,7 +48,7 @@ type Sensor struct {
 	// Default: <no value>
 	JsonAttributesTopic string `json:"json_attributes_topic,omitempty"`
 
-	// The MQTT topic subscribed to receive timestamps for when an accumulating sensor such as an energy meter was reset. If the sensor never resets, set it to UNIX epoch 0: `1970-01-01T00:00:00+00:00`
+	// The MQTT topic subscribed to receive timestamps for when an accumulating sensor such as an energy meter was reset. If the sensor never resets, set `last_reset_topic` to same as `state_topic` and set the `last_reset_value_template` to a constant valid timstamp, for example UNIX epoch 0: `1970-01-01T00:00:00+00:00`
 	// Default: <no value>
 	LastResetTopic string `json:"last_reset_topic,omitempty"`
 
@@ -89,4 +91,23 @@ type Sensor struct {
 	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the value. Available variables: `entity_id`. The `entity_id` can be used to reference the entity's attributes
 	// Default: <no value>
 	ValueTemplate string `json:"value_template,omitempty"`
+}
+
+// AnnounceTopic returns the topic to announce the discoverable Sensor
+// Topic has the format below:
+//   <discovery_prefix>/<component>/<object_id>/config
+// 'object_id' is either the UniqueId, the Name, or a hash of the Sensor
+func (d *Sensor) AnnounceTopic(prefix string) string {
+	topicFormat := "%s/sensor/%s/config"
+	objectID := ""
+	switch {
+	case d.UniqueId != "":
+		objectID = d.UniqueId
+	case d.Name != "":
+		objectID = d.Name
+	default:
+		objectID = hash(d)
+	}
+
+	return fmt.Sprintf(topicFormat, prefix, objectID)
 }

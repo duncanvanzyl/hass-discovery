@@ -6,7 +6,9 @@ for use with [Home Assistant](https://www.home-assistant.io/).
 ## Usage
 Create an entry for the type of device you want to announce. Then publish to a 
 valid [topic](https://www.home-assistant.io/docs/mqtt/discovery/#discovery-topic).
+A valid topic can be generated from the device entry with `device.AnnounceTopic(prefix)`. The default prefix in `homeassistant`, but is configurable your `configuration.yaml` file
 
+Example:
 ```go
 func PublishBinarySensor(cli mqtt.Client) error {
 	uid := "someuniqueidentifier"
@@ -35,7 +37,7 @@ func PublishBinarySensor(cli mqtt.Client) error {
 		return fmt.Errorf("could not marshal Binary Sensor: %v", err)
 	}
 
-	announceTopic := fmt.Sprintf("homeassistant/binary_sensor/%s/config", uid)
+	announceTopic := s.AnnounceTopic("homeassistant")
 	cli.Publish(announceTopic, 0, true, bs)
 
 	return nil
@@ -53,4 +55,3 @@ It's much easier to generate the structs from the yaml used to create the docume
 
 ### Issues
 - Device and Availability structs are hard coded and defined in [hassdiscovery.go](./hassdiscovery.go).
-- humidifier - has an error in the yaml defining the structure. Using an edited local copy for generating the humidifier struct.

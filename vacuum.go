@@ -1,5 +1,7 @@
 package discovery
 
+import "fmt"
+
 type Vacuum struct {
 
 	// A list of MQTT topics subscribed to receive availability (online/offline) updates. Must not be used together with `availability_topic`
@@ -153,4 +155,23 @@ type Vacuum struct {
 	// An ID that uniquely identifies this vacuum. If two vacuums have the same unique ID, Home Assistant will raise an exception
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
+}
+
+// AnnounceTopic returns the topic to announce the discoverable Vacuum
+// Topic has the format below:
+//   <discovery_prefix>/<component>/<object_id>/config
+// 'object_id' is either the UniqueId, the Name, or a hash of the Vacuum
+func (d *Vacuum) AnnounceTopic(prefix string) string {
+	topicFormat := "%s/vacuum/%s/config"
+	objectID := ""
+	switch {
+	case d.UniqueId != "":
+		objectID = d.UniqueId
+	case d.Name != "":
+		objectID = d.Name
+	default:
+		objectID = hash(d)
+	}
+
+	return fmt.Sprintf(topicFormat, prefix, objectID)
 }

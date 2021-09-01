@@ -1,5 +1,7 @@
 package discovery
 
+import "fmt"
+
 type Scene struct {
 
 	// A list of MQTT topics subscribed to receive availability (online/offline) updates. Must not be used together with `availability_topic`
@@ -53,4 +55,23 @@ type Scene struct {
 	// An ID that uniquely identifies this scene entity. If two scenes have the same unique ID, Home Assistant will raise an exception
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
+}
+
+// AnnounceTopic returns the topic to announce the discoverable Scene
+// Topic has the format below:
+//   <discovery_prefix>/<component>/<object_id>/config
+// 'object_id' is either the UniqueId, the Name, or a hash of the Scene
+func (d *Scene) AnnounceTopic(prefix string) string {
+	topicFormat := "%s/scene/%s/config"
+	objectID := ""
+	switch {
+	case d.UniqueId != "":
+		objectID = d.UniqueId
+	case d.Name != "":
+		objectID = d.Name
+	default:
+		objectID = hash(d)
+	}
+
+	return fmt.Sprintf(topicFormat, prefix, objectID)
 }

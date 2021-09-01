@@ -1,5 +1,7 @@
 package discovery
 
+import "fmt"
+
 type DeviceTrigger struct {
 
 	// The type of automation, must be 'trigger'
@@ -29,4 +31,15 @@ type DeviceTrigger struct {
 	// The type of the trigger, e.g. `button_short_press`. Entries supported by the frontend: `button_short_press`, `button_short_release`, `button_long_press`, `button_long_release`, `button_double_press`, `button_triple_press`, `button_quadruple_press`, `button_quintuple_press`. If set to an unsupported value, will render as `subtype type`, e.g. `button_1 spammed` with `type` set to `spammed` and `subtype` set to `button_1
 	// Default: <no value>
 	Type string `json:"type"`
+}
+
+// AnnounceTopic returns the topic to announce the discoverable DeviceTrigger
+// Topic has the format below:
+//   <discovery_prefix>/<component>/<object_id>/config
+// 'object_id' is either the UniqueId, the Name, or a hash of the DeviceTrigger
+func (d *DeviceTrigger) AnnounceTopic(prefix string) string {
+	topicFormat := "%s/device_trigger/%s/config"
+	objectID := hash(d)
+
+	return fmt.Sprintf(topicFormat, prefix, objectID)
 }

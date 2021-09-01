@@ -1,5 +1,7 @@
 package discovery
 
+import "fmt"
+
 type Humidifier struct {
 
 	// A list of MQTT topics subscribed to receive availability (online/offline) updates. Must not be used together with `availability_topic`
@@ -141,4 +143,23 @@ type Humidifier struct {
 	// An ID that uniquely identifies this humidifier. If two humidifiers have the same unique ID, Home Assistant will raise an exception
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
+}
+
+// AnnounceTopic returns the topic to announce the discoverable Humidifier
+// Topic has the format below:
+//   <discovery_prefix>/<component>/<object_id>/config
+// 'object_id' is either the UniqueId, the Name, or a hash of the Humidifier
+func (d *Humidifier) AnnounceTopic(prefix string) string {
+	topicFormat := "%s/humidifier/%s/config"
+	objectID := ""
+	switch {
+	case d.UniqueId != "":
+		objectID = d.UniqueId
+	case d.Name != "":
+		objectID = d.Name
+	default:
+		objectID = hash(d)
+	}
+
+	return fmt.Sprintf(topicFormat, prefix, objectID)
 }

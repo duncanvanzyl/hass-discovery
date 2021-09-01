@@ -1,5 +1,7 @@
 package discovery
 
+import "fmt"
+
 type Lock struct {
 
 	// A list of MQTT topics subscribed to receive availability (online/offline) updates. Must not be used together with `availability_topic`
@@ -89,4 +91,23 @@ type Lock struct {
 	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract a value from the payload
 	// Default: <no value>
 	ValueTemplate string `json:"value_template,omitempty"`
+}
+
+// AnnounceTopic returns the topic to announce the discoverable Lock
+// Topic has the format below:
+//   <discovery_prefix>/<component>/<object_id>/config
+// 'object_id' is either the UniqueId, the Name, or a hash of the Lock
+func (d *Lock) AnnounceTopic(prefix string) string {
+	topicFormat := "%s/lock/%s/config"
+	objectID := ""
+	switch {
+	case d.UniqueId != "":
+		objectID = d.UniqueId
+	case d.Name != "":
+		objectID = d.Name
+	default:
+		objectID = hash(d)
+	}
+
+	return fmt.Sprintf(topicFormat, prefix, objectID)
 }

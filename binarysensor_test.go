@@ -45,5 +45,7 @@ func TestBiggerSensor(t *testing.T) {
 		t.Fatalf("could not Binary Sensor: %v", err)
 	}
 
-	t.Fatalf("%s", bs)
+	at := s.AnnounceTopic("homeassistant")
+
+	t.Fatalf("%s - %s", at, bs)
 }

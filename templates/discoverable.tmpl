@@ -1,0 +1,12 @@
+package discovery
+
+import "fmt"
+
+type {{.Name | convertKey}} struct {
+	{{range $key, $value := .Data}}
+	{{$value.Description | comment}}
+	// Default: {{$value.Default}}
+	{{$key | convertKey}} {{$value | getType}} `json:"{{$key}}{{if not $value.Required}},omitempty{{end}}"`
+	{{end}}
+}
+

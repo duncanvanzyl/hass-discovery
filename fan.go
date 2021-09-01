@@ -1,5 +1,7 @@
 package discovery
 
+import "fmt"
+
 type Fan struct {
 
 	// A list of MQTT topics subscribed to receive availability (online/offline) updates. Must not be used together with `availability_topic`
@@ -161,4 +163,23 @@ type Fan struct {
 	// An ID that uniquely identifies this fan. If two fans have the same unique ID, Home Assistant will raise an exception
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
+}
+
+// AnnounceTopic returns the topic to announce the discoverable Fan
+// Topic has the format below:
+//   <discovery_prefix>/<component>/<object_id>/config
+// 'object_id' is either the UniqueId, the Name, or a hash of the Fan
+func (d *Fan) AnnounceTopic(prefix string) string {
+	topicFormat := "%s/fan/%s/config"
+	objectID := ""
+	switch {
+	case d.UniqueId != "":
+		objectID = d.UniqueId
+	case d.Name != "":
+		objectID = d.Name
+	default:
+		objectID = hash(d)
+	}
+
+	return fmt.Sprintf(topicFormat, prefix, objectID)
 }

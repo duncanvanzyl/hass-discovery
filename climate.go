@@ -1,5 +1,7 @@
 package discovery
 
+import "fmt"
+
 type Climate struct {
 
 	// A template to render the value received on the `action_topic` with
@@ -269,4 +271,23 @@ type Climate struct {
 	// Default template to render the payloads on *all* `*_state_topic`s with
 	// Default: <no value>
 	ValueTemplate string `json:"value_template,omitempty"`
+}
+
+// AnnounceTopic returns the topic to announce the discoverable Climate
+// Topic has the format below:
+//   <discovery_prefix>/<component>/<object_id>/config
+// 'object_id' is either the UniqueId, the Name, or a hash of the Climate
+func (d *Climate) AnnounceTopic(prefix string) string {
+	topicFormat := "%s/climate/%s/config"
+	objectID := ""
+	switch {
+	case d.UniqueId != "":
+		objectID = d.UniqueId
+	case d.Name != "":
+		objectID = d.Name
+	default:
+		objectID = hash(d)
+	}
+
+	return fmt.Sprintf(topicFormat, prefix, objectID)
 }

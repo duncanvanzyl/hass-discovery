@@ -16,9 +16,13 @@ type Number struct {
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to generate the payload to send to `command_topic`
+	// Default: <no value>
+	CommandTemplate string `json:"command_template,omitempty"`
+
 	// The MQTT topic to publish commands to change the number
 	// Default: <no value>
-	CommandTopic string `json:"command_topic,omitempty"`
+	CommandTopic string `json:"command_topic"`
 
 	// Information about the device this Number is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works through [MQTT discovery](/docs/mqtt/discovery/) and when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
 	// Default: <no value>
@@ -27,6 +31,10 @@ type Number struct {
 	// Flag which defines if the entity should be enabled when first added
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
+
+	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
+	// Default: None
+	EntityCategory string `json:"entity_category,omitempty"`
 
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
@@ -52,9 +60,17 @@ type Number struct {
 	// Default: <no value>
 	Name string `json:"name,omitempty"`
 
+	// Used instead of `name` for automatic generation of `entity_id
+	// Default: <no value>
+	ObjectId string `json:"object_id,omitempty"`
+
 	// Flag that defines if number works in optimistic mode
 	// Default: `true` if no `state_topic` defined, else `false`.
 	Optimistic bool `json:"optimistic,omitempty"`
+
+	// A special payload that resets the state to `None` when received on the `state_topic`
+	// Default: "None"
+	PayloadReset string `json:"payload_reset,omitempty"`
 
 	// The maximum QoS level of the state topic. Default is 0 and will also be used to publishing messages
 	// Default: 0
@@ -75,6 +91,10 @@ type Number struct {
 	// An ID that uniquely identifies this Number. If two Numbers have the same unique ID Home Assistant will raise an exception
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
+
+	// Defines the unit of measurement of the sensor, if any
+	// Default: <no value>
+	UnitOfMeasurement string `json:"unit_of_measurement,omitempty"`
 
 	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the value
 	// Default: <no value>

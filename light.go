@@ -12,6 +12,10 @@ type Light struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Default: <no value>
+	AvailabilityTemplate string `json:"availability_template,omitempty"`
+
 	// The MQTT topic subscribed to receive availability (online/offline) updates. Must not be used together with `availability`
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
@@ -48,7 +52,7 @@ type Light struct {
 	// Default: <no value>
 	ColorTempCommandTopic string `json:"color_temp_command_topic,omitempty"`
 
-	// The MQTT topic subscribed to receive color temperature state updates. If the light also supports setting colors, also define a `white_value_state_topic`.
+	// The MQTT topic subscribed to receive color temperature state updates
 	// Default: <no value>
 	ColorTempStateTopic string `json:"color_temp_state_topic,omitempty"`
 
@@ -83,6 +87,10 @@ type Light struct {
 	// Flag which defines if the entity should be enabled when first added
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
+
+	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
+	// Default: None
+	EntityCategory string `json:"entity_category,omitempty"`
 
 	// The MQTT topic to publish commands to change the light's color state in HS format (Hue Saturation). Range for Hue: 0° .. 360°, Range of Saturation: 0..100. Note: Brightness is sent separately in the `brightness_command_topic`
 	// Default: <no value>
@@ -119,6 +127,10 @@ type Light struct {
 	// The name of the light
 	// Default: MQTT Light
 	Name string `json:"name,omitempty"`
+
+	// Used instead of `name` for automatic generation of `entity_id
+	// Default: <no value>
+	ObjectId string `json:"object_id,omitempty"`
 
 	// Defines when on the payload_on is sent. Using `last` (the default) will send any style (brightness, color, etc) topics first and then a `payload_on` to the `command_topic`. Using `first` will send the `payload_on` and then any style topics. Using `brightness` will only send brightness commands instead of the `payload_on` to turn the light on
 	// Default: <no value>

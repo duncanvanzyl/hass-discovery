@@ -12,6 +12,10 @@ type BinarySensor struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Default: <no value>
+	AvailabilityTemplate string `json:"availability_template,omitempty"`
+
 	// The MQTT topic subscribed to receive birth and LWT messages from the MQTT device. If `availability` is not defined, the binary sensor will always be considered `available` and its state will be `on`, `off` or `unknown`. If `availability` is defined, the binary sensor will be considered as `unavailable` by default and the sensor's initial state will be `unavailable`. Must not be used together with `availability`
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
@@ -27,6 +31,14 @@ type BinarySensor struct {
 	// Flag which defines if the entity should be enabled when first added
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
+
+	// The encoding of the payload received at `state_topic` and availability topics `availability_topic` and `topic`. Set to `""` to disable decoding
+	// Default: utf-8
+	Encoding string `json:"encoding,omitempty"`
+
+	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
+	// Default: None
+	EntityCategory string `json:"entity_category,omitempty"`
 
 	// Defines the number of seconds after the sensor's state expires, if it's not updated. After expiry, the sensor's state becomes `unavailable`
 	// Default: <no value>
@@ -51,6 +63,10 @@ type BinarySensor struct {
 	// The name of the binary sensor
 	// Default: MQTT Binary Sensor
 	Name string `json:"name,omitempty"`
+
+	// Used instead of `name` for automatic generation of `entity_id
+	// Default: <no value>
+	ObjectId string `json:"object_id,omitempty"`
 
 	// For sensors that only send `on` state updates (like PIRs), this variable sets a delay in seconds after which the sensor's state will be updated back to `off`
 	// Default: <no value>

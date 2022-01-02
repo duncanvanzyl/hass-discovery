@@ -12,6 +12,10 @@ type Vacuum struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Default: <no value>
+	AvailabilityTemplate string `json:"availability_template,omitempty"`
+
 	// The MQTT topic subscribed to receive availability (online/offline) updates. Must not be used together with `availability`
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
@@ -56,6 +60,10 @@ type Vacuum struct {
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
 
+	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
+	// Default: None
+	EntityCategory string `json:"entity_category,omitempty"`
+
 	// Defines a [template](/topics/templating/) to define potential error messages emitted by the vacuum. This is required if `error_topic` is set
 	// Default: <no value>
 	ErrorTemplate string `json:"error_template,omitempty"`
@@ -91,6 +99,10 @@ type Vacuum struct {
 	// The name of the vacuum
 	// Default: MQTT Vacuum
 	Name string `json:"name,omitempty"`
+
+	// Used instead of `name` for automatic generation of `entity_id
+	// Default: <no value>
+	ObjectId string `json:"object_id,omitempty"`
 
 	// The payload that represents the available state
 	// Default: online

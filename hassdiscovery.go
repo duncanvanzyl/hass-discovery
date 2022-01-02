@@ -1,23 +1,23 @@
 package discovery
 
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/alarm_control_panel.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/binary_sensor.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/camera.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/cover.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/device_tracker.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/device_trigger.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/fan.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/humidifier.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/climate.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/light.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/lock.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/number.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/scene.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/select.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/sensor.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/switch.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/tag.mqtt.markdown
-//go:generate go run generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/vacuum.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/alarm_control_panel.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/binary_sensor.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/camera.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/cover.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/device_tracker.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/device_trigger.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/fan.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/humidifier.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/climate.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/light.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/lock.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/number.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/scene.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/select.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/sensor.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/switch.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/tag.mqtt.markdown
+//go:generate go run generator/generator.go https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/source/_integrations/vacuum.mqtt.markdown
 
 // Availability is used by mulitple discovery configurations as a list of MQTT topics subscribed to
 // receive availability (online/offline) updates. Must not be used together with availability_topic.

@@ -12,6 +12,10 @@ type Lock struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Default: <no value>
+	AvailabilityTemplate string `json:"availability_template,omitempty"`
+
 	// The MQTT topic subscribed to receive availability (online/offline) updates. Must not be used together with `availability`
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
@@ -27,6 +31,10 @@ type Lock struct {
 	// Flag which defines if the entity should be enabled when first added
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
+
+	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
+	// Default: None
+	EntityCategory string `json:"entity_category,omitempty"`
 
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
@@ -44,15 +52,19 @@ type Lock struct {
 	// Default: MQTT Lock
 	Name string `json:"name,omitempty"`
 
+	// Used instead of `name` for automatic generation of `entity_id
+	// Default: <no value>
+	ObjectId string `json:"object_id,omitempty"`
+
 	// Flag that defines if lock works in optimistic mode
 	// Default: `true` if no `state_topic` defined, else `false`.
-	Optimistic string `json:"optimistic,omitempty"`
+	Optimistic bool `json:"optimistic,omitempty"`
 
 	// The payload that represents the available state
 	// Default: online
 	PayloadAvailable string `json:"payload_available,omitempty"`
 
-	// The payload that represents enabled/locked state
+	// The payload sent to the lock to lock it
 	// Default: LOCK
 	PayloadLock string `json:"payload_lock,omitempty"`
 
@@ -60,7 +72,11 @@ type Lock struct {
 	// Default: offline
 	PayloadNotAvailable string `json:"payload_not_available,omitempty"`
 
-	// The payload that represents disabled/unlocked state
+	// The payload sent to the lock to open it
+	// Default: OPEN
+	PayloadOpen string `json:"payload_open,omitempty"`
+
+	// The payload sent to the lock to unlock it
 	// Default: UNLOCK
 	PayloadUnlock string `json:"payload_unlock,omitempty"`
 
@@ -72,7 +88,7 @@ type Lock struct {
 	// Default: false
 	Retain bool `json:"retain,omitempty"`
 
-	// The value that represents the lock to be in locked stat
+	// The payload sent to by the lock when it's locked
 	// Default: LOCKED
 	StateLocked string `json:"state_locked,omitempty"`
 
@@ -80,7 +96,7 @@ type Lock struct {
 	// Default: <no value>
 	StateTopic string `json:"state_topic,omitempty"`
 
-	// The value that represents the lock to be in unlocked stat
+	// The payload sent to by the lock when it's unlocked
 	// Default: UNLOCKED
 	StateUnlocked string `json:"state_unlocked,omitempty"`
 

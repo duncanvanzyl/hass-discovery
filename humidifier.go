@@ -12,6 +12,10 @@ type Humidifier struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Default: <no value>
+	AvailabilityTemplate string `json:"availability_template,omitempty"`
+
 	// The MQTT topic subscribed to receive availability (online/offline) updates. Must not be used together with `availability`
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
@@ -35,6 +39,10 @@ type Humidifier struct {
 	// Flag which defines if the entity should be enabled when first added
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
+
+	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
+	// Default: None
+	EntityCategory string `json:"entity_category,omitempty"`
 
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
@@ -79,6 +87,10 @@ type Humidifier struct {
 	// The name of the humidifier
 	// Default: MQTT humidifier
 	Name string `json:"name,omitempty"`
+
+	// Used instead of `name` for automatic generation of `entity_id
+	// Default: <no value>
+	ObjectId string `json:"object_id,omitempty"`
 
 	// Flag that defines if humidifier works in optimistic mod
 	// Default: `true` if no state topic defined, else `false`.

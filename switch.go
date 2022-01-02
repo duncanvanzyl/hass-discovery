@@ -12,6 +12,10 @@ type Switch struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Default: <no value>
+	AvailabilityTemplate string `json:"availability_template,omitempty"`
+
 	// The MQTT topic subscribed to receive availability (online/offline) updates. Must not be used together with `availability`
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
@@ -24,9 +28,17 @@ type Switch struct {
 	// Default: <no value>
 	Device *Device `json:"device,omitempty"`
 
+	// The [type/class](/integrations/switch/#device-class) of the switch to set the icon in the frontend
+	// Default: None
+	DeviceClass string `json:"device_class,omitempty"`
+
 	// Flag which defines if the entity should be enabled when first added
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
+
+	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
+	// Default: None
+	EntityCategory string `json:"entity_category,omitempty"`
 
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
@@ -43,6 +55,10 @@ type Switch struct {
 	// The name to use when displaying this switch
 	// Default: MQTT Switch
 	Name string `json:"name,omitempty"`
+
+	// Used instead of `name` for automatic generation of `entity_id
+	// Default: <no value>
+	ObjectId string `json:"object_id,omitempty"`
 
 	// Flag that defines if switch works in optimistic mode
 	// Default: `true` if no `state_topic` defined, else `false`.

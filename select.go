@@ -12,9 +12,17 @@ type Select struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Default: <no value>
+	AvailabilityTemplate string `json:"availability_template,omitempty"`
+
 	// The MQTT topic subscribed to receive availability (online/offline) updates. Must not be used together with `availability`
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
+
+	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to generate the payload to send to `command_topic`
+	// Default: <no value>
+	CommandTemplate string `json:"command_template,omitempty"`
 
 	// The MQTT topic to publish commands to change the selected option
 	// Default: <no value>
@@ -27,6 +35,10 @@ type Select struct {
 	// Flag which defines if the entity should be enabled when first added
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
+
+	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
+	// Default: None
+	EntityCategory string `json:"entity_category,omitempty"`
 
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
@@ -44,11 +56,15 @@ type Select struct {
 	// Default: <no value>
 	Name string `json:"name,omitempty"`
 
+	// Used instead of `name` for automatic generation of `entity_id
+	// Default: <no value>
+	ObjectId string `json:"object_id,omitempty"`
+
 	// Flag that defines if the select works in optimistic mode
 	// Default: `true` if no `state_topic` defined, else `false`.
 	Optimistic bool `json:"optimistic,omitempty"`
 
-	// List of options that can be selected
+	// List of options that can be selected. An empty list or a list with a single item is allowed
 	// Default: <no value>
 	Options string `json:"options"`
 

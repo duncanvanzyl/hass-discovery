@@ -12,11 +12,15 @@ type AlarmControlPanel struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Default: <no value>
+	AvailabilityTemplate string `json:"availability_template,omitempty"`
+
 	// The MQTT topic subscribed to receive availability (online/offline) updates. Must not be used together with `availability`
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
 
-	// If defined, specifies a code to enable or disable the alarm in the frontend
+	// If defined, specifies a code to enable or disable the alarm in the frontend. Note that the code is validated locally and blocks sending MQTT messages to the remote device. For remote code validation, the code can be configured to either of the special values `REMOTE_CODE` (numeric code) or `REMOTE_CODE_TEXT` (text code). In this case, local code validation is bypassed but the frontend will still show a numeric or text code dialog. Use `command_template` to send the code to the remote device. Example configurations for remote code validation [can be found here](./#configurations-with-remote-code-validation)
 	// Default: <no value>
 	Code string `json:"code,omitempty"`
 
@@ -27,6 +31,10 @@ type AlarmControlPanel struct {
 	// If true the code is required to disarm the alarm. If false the code is not validated
 	// Default: true
 	CodeDisarmRequired bool `json:"code_disarm_required,omitempty"`
+
+	// If true the code is required to trigger the alarm. If false the code is not validated
+	// Default: true
+	CodeTriggerRequired bool `json:"code_trigger_required,omitempty"`
 
 	// The [template](/docs/configuration/templating/#processing-incoming-data) used for the command payload. Available variables: `action` and `code`
 	// Default: action
@@ -44,6 +52,10 @@ type AlarmControlPanel struct {
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
 
+	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
+	// Default: None
+	EntityCategory string `json:"entity_category,omitempty"`
+
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
 	Icon string `json:"icon,omitempty"`
@@ -59,6 +71,10 @@ type AlarmControlPanel struct {
 	// The name of the alarm
 	// Default: MQTT Alarm
 	Name string `json:"name,omitempty"`
+
+	// Used instead of `name` for automatic generation of `entity_id
+	// Default: <no value>
+	ObjectId string `json:"object_id,omitempty"`
 
 	// The payload to set armed-away mode on your Alarm Panel
 	// Default: ARM_AWAY
@@ -76,6 +92,10 @@ type AlarmControlPanel struct {
 	// Default: ARM_NIGHT
 	PayloadArmNight string `json:"payload_arm_night,omitempty"`
 
+	// The payload to set armed-vacation mode on your Alarm Panel
+	// Default: ARM_VACATION
+	PayloadArmVacation string `json:"payload_arm_vacation,omitempty"`
+
 	// The payload that represents the available state
 	// Default: online
 	PayloadAvailable string `json:"payload_available,omitempty"`
@@ -87,6 +107,10 @@ type AlarmControlPanel struct {
 	// The payload that represents the unavailable state
 	// Default: offline
 	PayloadNotAvailable string `json:"payload_not_available,omitempty"`
+
+	// The payload to trigger the alarm on your Alarm Panel
+	// Default: TRIGGER
+	PayloadTrigger string `json:"payload_trigger,omitempty"`
 
 	// The maximum QoS level of the state topic
 	// Default: 0

@@ -65,3 +65,10 @@ type Device struct {
 	// Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device. This is used to show device topology in Home Assistant.
 	ViaDevice string `json:"via_device,omitempty"`
 }
+
+// Announcer is an interface for things that can announce themselves.
+// Intended usage is to use AnnounceTopic to create the topic to announce to home assistant, and
+// then use json.Marshal to convert the announcer into a payload.
+type Announcer interface {
+	AnnounceTopic(string) string
+}

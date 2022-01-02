@@ -170,7 +170,7 @@ func readYAML(url string) error {
 		"comment":    comment,
 	}
 
-	t, err := template.New("").Funcs(funcMap).ParseGlob("templates/*.tmpl")
+	t, err := template.New("").Funcs(funcMap).ParseGlob("generator/templates/*.tmpl")
 	if err != nil {
 		return fmt.Errorf("could not create template: %v", err)
 	}

@@ -42,7 +42,7 @@ type Availability struct {
 type Device struct {
 	// connections list | map (optional)
 	// A list of connections of the device to the outside world as a list of tuples [connection_type, connection_identifier]. For example the MAC address of a network interface: 'connections': ['mac', '02:5b:26:a8:dc:12'].
-	Connections []string `json:"connections,omitempty"`
+	Connections [][2]string `json:"connections,omitempty"`
 	// identifiers list | string (optional)
 	// A list of IDs that uniquely identify the device. For example a serial number.
 	Identifiers []string `json:"identifiers,omitempty"`

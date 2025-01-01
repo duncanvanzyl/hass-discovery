@@ -12,7 +12,7 @@ type Switch struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
 	// Default: <no value>
 	AvailabilityTemplate string `json:"availability_template,omitempty"`
 
@@ -20,31 +20,43 @@ type Switch struct {
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to generate the payload to send to `command_topic`. The switch command template accepts the parameters `value`. The `value` parameter will contain the configured value for either `payload_on` or `payload_off`
+	// Default: <no value>
+	CommandTemplate string `json:"command_template,omitempty"`
+
 	// The MQTT topic to publish commands to change the switch state
 	// Default: <no value>
-	CommandTopic string `json:"command_topic,omitempty"`
+	CommandTopic string `json:"command_topic"`
 
-	// Information about the device this switch is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works through [MQTT discovery](/docs/mqtt/discovery/) and when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
+	// Information about the device this switch is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
 	// Default: <no value>
 	Device *Device `json:"device,omitempty"`
 
-	// The [type/class](/integrations/switch/#device-class) of the switch to set the icon in the frontend
-	// Default: None
+	// The [type/class](/integrations/switch/#device-class) of the switch to set the icon in the frontend. The `device_class` can be `null`
+	// Default: <no value>
 	DeviceClass string `json:"device_class,omitempty"`
 
 	// Flag which defines if the entity should be enabled when first added
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
 
+	// The encoding of the payloads received and published messages. Set to `""` to disable decoding of incoming payload
+	// Default: utf-8
+	Encoding string `json:"encoding,omitempty"`
+
 	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
-	// Default: None
+	// Default: <no value>
 	EntityCategory string `json:"entity_category,omitempty"`
+
+	// Picture URL for the entity
+	// Default: <no value>
+	EntityPicture string `json:"entity_picture,omitempty"`
 
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
 	Icon string `json:"icon,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
 	// Default: <no value>
 	JsonAttributesTemplate string `json:"json_attributes_template,omitempty"`
 
@@ -52,7 +64,7 @@ type Switch struct {
 	// Default: <no value>
 	JsonAttributesTopic string `json:"json_attributes_topic,omitempty"`
 
-	// The name to use when displaying this switch
+	// The name to use when displaying this switch. Can be set to `null` if only the device name is relevant
 	// Default: MQTT Switch
 	Name string `json:"name,omitempty"`
 
@@ -80,7 +92,11 @@ type Switch struct {
 	// Default: ON
 	PayloadOn string `json:"payload_on,omitempty"`
 
-	// The maximum QoS level of the state topic. Default is 0 and will also be used to publishing messages
+	// Must be `switch`. Only allowed and required in [MQTT auto discovery device messages](/integrations/mqtt/#device-discovery-payload)
+	// Default: <no value>
+	Platform string `json:"platform"`
+
+	// The maximum QoS level to be used when receiving and publishing messages
 	// Default: 0
 	Qos int `json:"qos,omitempty"`
 
@@ -89,22 +105,22 @@ type Switch struct {
 	Retain bool `json:"retain,omitempty"`
 
 	// The payload that represents the `off` state. Used when value that represents `off` state in the `state_topic` is different from value that should be sent to the `command_topic` to turn the device `off`
-	// Default: `payload_off` if defined, else OFF
+	// Default: `payload_off` if defined, else `OFF`
 	StateOff string `json:"state_off,omitempty"`
 
 	// The payload that represents the `on` state. Used when value that represents `on` state in the `state_topic` is different from value that should be sent to the `command_topic` to turn the device `on`
-	// Default: `payload_on` if defined, else ON
+	// Default: `payload_on` if defined, else `ON`
 	StateOn string `json:"state_on,omitempty"`
 
-	// The MQTT topic subscribed to receive state updates
+	// The MQTT topic subscribed to receive state updates. A "None" payload resets to an `unknown` state. An empty payload is ignored.By default, valid state payloads are `OFF` and `ON`. The accepted payloads can be overridden with the `payload_off` and `payload_on` config options
 	// Default: <no value>
 	StateTopic string `json:"state_topic,omitempty"`
 
-	// An ID that uniquely identifies this switch device. If two switches have the same unique ID, Home Assistant will raise an exception
+	// An ID that uniquely identifies this switch device. If two switches have the same unique ID, Home Assistant will raise an exception. Required when used with device-based discovery
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's state from the `state_topic`. To determine the switches's state result of this template will be compared to `state_on` and `state_off`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract device's state from the `state_topic`. To determine the switches's state result of this template will be compared to `state_on` and `state_off`
 	// Default: <no value>
 	ValueTemplate string `json:"value_template,omitempty"`
 }

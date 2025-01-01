@@ -12,7 +12,7 @@ type BinarySensor struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
 	// Default: <no value>
 	AvailabilityTemplate string `json:"availability_template,omitempty"`
 
@@ -20,11 +20,11 @@ type BinarySensor struct {
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
 
-	// Information about the device this binary sensor is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works through [MQTT discovery](/docs/mqtt/discovery/) and when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
+	// Information about the device this binary sensor is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/device_registry_index/). Only works when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
 	// Default: <no value>
 	Device *Device `json:"device,omitempty"`
 
-	// Sets the [class of the device](/integrations/binary_sensor/#device-class), changing the device state and icon that is displayed on the frontend
+	// Sets the [class of the device](/integrations/binary_sensor/#device-class), changing the device state and icon that is displayed on the frontend. The `device_class` can be `null`
 	// Default: <no value>
 	DeviceClass string `json:"device_class,omitempty"`
 
@@ -32,15 +32,19 @@ type BinarySensor struct {
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
 
-	// The encoding of the payload received at `state_topic` and availability topics `availability_topic` and `topic`. Set to `""` to disable decoding
+	// The encoding of the payloads received. Set to `""` to disable decoding of incoming payload
 	// Default: utf-8
 	Encoding string `json:"encoding,omitempty"`
 
-	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
-	// Default: None
+	// The [category](https://developers.home-assistant.io/docs/core/entity/#generic-properties) of the entity. When set, the entity category must be `diagnostic` for sensors
+	// Default: <no value>
 	EntityCategory string `json:"entity_category,omitempty"`
 
-	// Defines the number of seconds after the sensor's state expires, if it's not updated. After expiry, the sensor's state becomes `unavailable`
+	// Picture URL for the entity
+	// Default: <no value>
+	EntityPicture string `json:"entity_picture,omitempty"`
+
+	// If set, it defines the number of seconds after the sensor's state expires, if it's not updated. After expiry, the sensor's state becomes `unavailable`. Default the sensors state never expires
 	// Default: <no value>
 	ExpireAfter int `json:"expire_after,omitempty"`
 
@@ -52,7 +56,7 @@ type BinarySensor struct {
 	// Default: <no value>
 	Icon string `json:"icon,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
 	// Default: <no value>
 	JsonAttributesTemplate string `json:"json_attributes_template,omitempty"`
 
@@ -60,8 +64,8 @@ type BinarySensor struct {
 	// Default: <no value>
 	JsonAttributesTopic string `json:"json_attributes_topic,omitempty"`
 
-	// The name of the binary sensor
-	// Default: MQTT Binary Sensor
+	// The name of the binary sensor. Can be set to `null` if only the device name is relevant
+	// Default: MQTT binary sensor
 	Name string `json:"name,omitempty"`
 
 	// Used instead of `name` for automatic generation of `entity_id
@@ -88,19 +92,23 @@ type BinarySensor struct {
 	// Default: ON
 	PayloadOn string `json:"payload_on,omitempty"`
 
-	// The maximum QoS level to be used when receiving messages
+	// Must be `binary_sensor`. Only allowed and required in [MQTT auto discovery device messages](/integrations/mqtt/#device-discovery-payload)
+	// Default: <no value>
+	Platform string `json:"platform"`
+
+	// The maximum QoS level to be used when receiving and publishing messages
 	// Default: 0
 	Qos int `json:"qos,omitempty"`
 
-	// The MQTT topic subscribed to receive sensor's state
+	// The MQTT topic subscribed to receive sensor's state. Valid states are `OFF` and `ON`. Custom `OFF` and `ON` values can be set with the `payload_off` and `payload_on` config options
 	// Default: <no value>
 	StateTopic string `json:"state_topic"`
 
-	// An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception
+	// An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception. Required when used with device-based discovery
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) that returns a string to be compared to `payload_on`/`payload_off` or an empty string, in which case the MQTT message will be removed. Available variables: `entity_id`. Remove this option when 'payload_on' and 'payload_off' are sufficient to match your payloads (i.e no pre-processing of original message is required)
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) that returns a string to be compared to `payload_on`/`payload_off` or an empty string, in which case the MQTT message will be removed. Remove this option when `payload_on` and `payload_off` are sufficient to match your payloads (i.e no preprocessing of original message is required)
 	// Default: <no value>
 	ValueTemplate string `json:"value_template,omitempty"`
 }

@@ -16,7 +16,7 @@ type Number struct {
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to generate the payload to send to `command_topic`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to generate the payload to send to `command_topic`
 	// Default: <no value>
 	CommandTemplate string `json:"command_template,omitempty"`
 
@@ -24,23 +24,35 @@ type Number struct {
 	// Default: <no value>
 	CommandTopic string `json:"command_topic"`
 
-	// Information about the device this Number is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works through [MQTT discovery](/docs/mqtt/discovery/) and when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
+	// Information about the device this Number is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
 	// Default: <no value>
 	Device *Device `json:"device,omitempty"`
+
+	// The [type/class](/integrations/number/#device-class) of the number. The `device_class` can be `null`
+	// Default: <no value>
+	DeviceClass string `json:"device_class,omitempty"`
 
 	// Flag which defines if the entity should be enabled when first added
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
 
+	// The encoding of the payloads received and published messages. Set to `""` to disable decoding of incoming payload
+	// Default: utf-8
+	Encoding string `json:"encoding,omitempty"`
+
 	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
-	// Default: None
+	// Default: <no value>
 	EntityCategory string `json:"entity_category,omitempty"`
+
+	// Picture URL for the entity
+	// Default: <no value>
+	EntityPicture string `json:"entity_picture,omitempty"`
 
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
 	Icon string `json:"icon,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the JSON dictionary from messages received on the `json_attributes_topic`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the JSON dictionary from messages received on the `json_attributes_topic`
 	// Default: <no value>
 	JsonAttributesTemplate string `json:"json_attributes_template,omitempty"`
 
@@ -56,7 +68,11 @@ type Number struct {
 	// Default: 1
 	Min string `json:"min,omitempty"`
 
-	// The name of the Number
+	// Control how the number should be displayed in the UI. Can be set to `box` or `slider` to force a display mode
+	// Default: "auto"
+	Mode string `json:"mode,omitempty"`
+
+	// The name of the Number. Can be set to `null` if only the device name is relevant
 	// Default: <no value>
 	Name string `json:"name,omitempty"`
 
@@ -68,11 +84,15 @@ type Number struct {
 	// Default: `true` if no `state_topic` defined, else `false`.
 	Optimistic bool `json:"optimistic,omitempty"`
 
-	// A special payload that resets the state to `None` when received on the `state_topic`
+	// A special payload that resets the state to `unknown` when received on the `state_topic`
 	// Default: "None"
 	PayloadReset string `json:"payload_reset,omitempty"`
 
-	// The maximum QoS level of the state topic. Default is 0 and will also be used to publishing messages
+	// Must be `number`. Only allowed and required in [MQTT auto discovery device messages](/integrations/mqtt/#device-discovery-payload)
+	// Default: <no value>
+	Platform string `json:"platform"`
+
+	// The maximum QoS level to be used when receiving and publishing messages
 	// Default: 0
 	Qos int `json:"qos,omitempty"`
 
@@ -80,7 +100,7 @@ type Number struct {
 	// Default: false
 	Retain bool `json:"retain,omitempty"`
 
-	// The MQTT topic subscribed to receive number values
+	// The MQTT topic subscribed to receive number values. An empty payload is ignored
 	// Default: <no value>
 	StateTopic string `json:"state_topic,omitempty"`
 
@@ -88,15 +108,15 @@ type Number struct {
 	// Default: 1
 	Step string `json:"step,omitempty"`
 
-	// An ID that uniquely identifies this Number. If two Numbers have the same unique ID Home Assistant will raise an exception
+	// An ID that uniquely identifies this Number. If two Numbers have the same unique ID Home Assistant will raise an exception. Required when used with device-based discovery
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
 
-	// Defines the unit of measurement of the sensor, if any
+	// Defines the unit of measurement of the sensor, if any. The `unit_of_measurement` can be `null`
 	// Default: <no value>
 	UnitOfMeasurement string `json:"unit_of_measurement,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the value
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the value
 	// Default: <no value>
 	ValueTemplate string `json:"value_template,omitempty"`
 }

@@ -16,7 +16,11 @@ type DeviceTrigger struct {
 	// Default: <no value>
 	Payload string `json:"payload,omitempty"`
 
-	// The maximum QoS level to be used when receiving messages
+	// Must be `device_automation`. Only allowed and required in [MQTT auto discovery device messages](/integrations/mqtt/#device-discovery-payload)
+	// Default: <no value>
+	Platform string `json:"platform"`
+
+	// The maximum QoS level to be used when receiving and publishing messages
 	// Default: 0
 	Qos int `json:"qos,omitempty"`
 
@@ -31,6 +35,10 @@ type DeviceTrigger struct {
 	// The type of the trigger, e.g. `button_short_press`. Entries supported by the frontend: `button_short_press`, `button_short_release`, `button_long_press`, `button_long_release`, `button_double_press`, `button_triple_press`, `button_quadruple_press`, `button_quintuple_press`. If set to an unsupported value, will render as `subtype type`, e.g. `button_1 spammed` with `type` set to `spammed` and `subtype` set to `button_1
 	// Default: <no value>
 	Type string `json:"type"`
+
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the value
+	// Default: <no value>
+	ValueTemplate string `json:"value_template,omitempty"`
 }
 
 // AnnounceTopic returns the topic to announce the discoverable DeviceTrigger

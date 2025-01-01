@@ -12,7 +12,7 @@ type Vacuum struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
 	// Default: <no value>
 	AvailabilityTemplate string `json:"availability_template,omitempty"`
 
@@ -20,75 +20,23 @@ type Vacuum struct {
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
 
-	// Defines a [template](/topics/templating/) to define the battery level of the vacuum. This is required if `battery_level_topic` is set
-	// Default: <no value>
-	BatteryLevelTemplate string `json:"battery_level_template,omitempty"`
-
-	// The MQTT topic subscribed to receive battery level values from the vacuum
-	// Default: <no value>
-	BatteryLevelTopic string `json:"battery_level_topic,omitempty"`
-
-	// Defines a [template](/topics/templating/) to define the charging state of the vacuum. This is required if `charging_topic` is set
-	// Default: <no value>
-	ChargingTemplate string `json:"charging_template,omitempty"`
-
-	// The MQTT topic subscribed to receive charging state values from the vacuum
-	// Default: <no value>
-	ChargingTopic string `json:"charging_topic,omitempty"`
-
-	// Defines a [template](/topics/templating/) to define the cleaning state of the vacuum. This is required if `cleaning_topic` is set
-	// Default: <no value>
-	CleaningTemplate string `json:"cleaning_template,omitempty"`
-
-	// The MQTT topic subscribed to receive cleaning state values from the vacuum
-	// Default: <no value>
-	CleaningTopic string `json:"cleaning_topic,omitempty"`
-
 	// The MQTT topic to publish commands to control the vacuum
 	// Default: <no value>
 	CommandTopic string `json:"command_topic,omitempty"`
 
-	// Defines a [template](/topics/templating/) to define the docked state of the vacuum. This is required if `docked_topic` is set
+	// Information about the device this switch is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
 	// Default: <no value>
-	DockedTemplate string `json:"docked_template,omitempty"`
+	Device *Device `json:"device,omitempty"`
 
-	// The MQTT topic subscribed to receive docked state values from the vacuum
-	// Default: <no value>
-	DockedTopic string `json:"docked_topic,omitempty"`
-
-	// Flag which defines if the entity should be enabled when first added
-	// Default: true
-	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
-
-	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
-	// Default: None
-	EntityCategory string `json:"entity_category,omitempty"`
-
-	// Defines a [template](/topics/templating/) to define potential error messages emitted by the vacuum. This is required if `error_topic` is set
-	// Default: <no value>
-	ErrorTemplate string `json:"error_template,omitempty"`
-
-	// The MQTT topic subscribed to receive error messages from the vacuum
-	// Default: <no value>
-	ErrorTopic string `json:"error_topic,omitempty"`
+	// The encoding of the payloads received and published messages. Set to `""` to disable decoding of incoming payload
+	// Default: utf-8
+	Encoding string `json:"encoding,omitempty"`
 
 	// List of possible fan speeds for the vacuum
 	// Default: <no value>
 	FanSpeedList []string `json:"fan_speed_list,omitempty"`
 
-	// Defines a [template](/topics/templating/) to define the fan speed of the vacuum. This is required if `fan_speed_topic` is set
-	// Default: <no value>
-	FanSpeedTemplate string `json:"fan_speed_template,omitempty"`
-
-	// The MQTT topic subscribed to receive fan speed values from the vacuum
-	// Default: <no value>
-	FanSpeedTopic string `json:"fan_speed_topic,omitempty"`
-
-	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
-	// Default: <no value>
-	Icon string `json:"icon,omitempty"`
-
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
 	// Default: <no value>
 	JsonAttributesTemplate string `json:"json_attributes_template,omitempty"`
 
@@ -96,7 +44,7 @@ type Vacuum struct {
 	// Default: <no value>
 	JsonAttributesTopic string `json:"json_attributes_topic,omitempty"`
 
-	// The name of the vacuum
+	// The name of the vacuum. Can be set to `null` if only the device name is relevant
 	// Default: MQTT Vacuum
 	Name string `json:"name,omitempty"`
 
@@ -120,37 +68,33 @@ type Vacuum struct {
 	// Default: offline
 	PayloadNotAvailable string `json:"payload_not_available,omitempty"`
 
+	// The payload to send to the `command_topic` to pause the vacuum
+	// Default: pause
+	PayloadPause string `json:"payload_pause,omitempty"`
+
 	// The payload to send to the `command_topic` to tell the vacuum to return to base
 	// Default: return_to_base
 	PayloadReturnToBase string `json:"payload_return_to_base,omitempty"`
 
-	// The payload to send to the `command_topic` to start or pause the vacuum
-	// Default: start_pause
-	PayloadStartPause string `json:"payload_start_pause,omitempty"`
+	// The payload to send to the `command_topic` to begin the cleaning cycle
+	// Default: start
+	PayloadStart string `json:"payload_start,omitempty"`
 
-	// The payload to send to the `command_topic` to stop the vacuum
+	// The payload to send to the `command_topic` to stop cleaning
 	// Default: stop
 	PayloadStop string `json:"payload_stop,omitempty"`
 
-	// The payload to send to the `command_topic` to turn the vacuum off
-	// Default: turn_off
-	PayloadTurnOff string `json:"payload_turn_off,omitempty"`
+	// Must be `vacuum`. Only allowed and required in [MQTT auto discovery device messages](/integrations/mqtt/#device-discovery-payload)
+	// Default: <no value>
+	Platform string `json:"platform"`
 
-	// The payload to send to the `command_topic` to begin the cleaning cycle
-	// Default: turn_on
-	PayloadTurnOn string `json:"payload_turn_on,omitempty"`
-
-	// The maximum QoS level of the state topic
+	// The maximum QoS level to be used when receiving and publishing messages
 	// Default: 0
 	Qos int `json:"qos,omitempty"`
 
 	// If the published message should have the retain flag on or not
 	// Default: false
 	Retain bool `json:"retain,omitempty"`
-
-	// The schema to use. Must be `legacy` or omitted to select the legacy schema
-	// Default: legacy
-	Schema string `json:"schema,omitempty"`
 
 	// The MQTT topic to publish custom commands to the vacuum
 	// Default: <no value>
@@ -160,11 +104,15 @@ type Vacuum struct {
 	// Default: <no value>
 	SetFanSpeedTopic string `json:"set_fan_speed_topic,omitempty"`
 
-	// List of features that the vacuum supports (possible values are `turn_on`, `turn_off`, `pause`, `stop`, `return_home`, `battery`, `status`, `locate`, `clean_spot`, `fan_speed`, `send_command`)
-	// Default: `turn_on`, `turn_off`, `stop`, `return_home`, `status`, `battery`, `clean_spot`
+	// The MQTT topic subscribed to receive state messages from the vacuum. Messages received on the `state_topic` must be a valid JSON dictionary, with a mandatory `state` key and optionally `battery_level` and `fan_speed` keys as shown in the [example](#configuration-example)
+	// Default: <no value>
+	StateTopic string `json:"state_topic,omitempty"`
+
+	// List of features that the vacuum supports (possible values are `start`, `stop`, `pause`, `return_home`, `battery`, `status`, `locate`, `clean_spot`, `fan_speed`, `send_command`)
+	// Default: `start`, `stop`, `return_home`, `status`, `battery`, `clean_spot`
 	SupportedFeatures []string `json:"supported_features,omitempty"`
 
-	// An ID that uniquely identifies this vacuum. If two vacuums have the same unique ID, Home Assistant will raise an exception
+	// An ID that uniquely identifies this vacuum. If two vacuums have the same unique ID, Home Assistant will raise an exception. Required when used with device-based discovery
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
 }

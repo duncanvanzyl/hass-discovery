@@ -12,7 +12,7 @@ type Fan struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
 	// Default: <no value>
 	AvailabilityTemplate string `json:"availability_template,omitempty"`
 
@@ -20,7 +20,7 @@ type Fan struct {
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to generate the payload to send to `command_topic`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to generate the payload to send to `command_topic`
 	// Default: <no value>
 	CommandTemplate string `json:"command_template,omitempty"`
 
@@ -28,23 +28,47 @@ type Fan struct {
 	// Default: <no value>
 	CommandTopic string `json:"command_topic"`
 
-	// Information about the device this fan is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works through [MQTT discovery](/docs/mqtt/discovery/) and when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
+	// Information about the device this fan is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
 	// Default: <no value>
 	Device *Device `json:"device,omitempty"`
+
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to generate the payload to send to `direction_command_topic`
+	// Default: <no value>
+	DirectionCommandTemplate string `json:"direction_command_template,omitempty"`
+
+	// The MQTT topic to publish commands to change the direction state
+	// Default: <no value>
+	DirectionCommandTopic string `json:"direction_command_topic,omitempty"`
+
+	// The MQTT topic subscribed to receive direction state updates
+	// Default: <no value>
+	DirectionStateTopic string `json:"direction_state_topic,omitempty"`
+
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract a value from the direction
+	// Default: <no value>
+	DirectionValueTemplate string `json:"direction_value_template,omitempty"`
 
 	// Flag which defines if the entity should be enabled when first added
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
 
+	// The encoding of the payloads received and published messages. Set to `""` to disable decoding of incoming payload
+	// Default: utf-8
+	Encoding string `json:"encoding,omitempty"`
+
 	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
-	// Default: None
+	// Default: <no value>
 	EntityCategory string `json:"entity_category,omitempty"`
+
+	// Picture URL for the entity
+	// Default: <no value>
+	EntityPicture string `json:"entity_picture,omitempty"`
 
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
 	Icon string `json:"icon,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
 	// Default: <no value>
 	JsonAttributesTemplate string `json:"json_attributes_template,omitempty"`
 
@@ -52,7 +76,7 @@ type Fan struct {
 	// Default: <no value>
 	JsonAttributesTopic string `json:"json_attributes_topic,omitempty"`
 
-	// The name of the fan
+	// The name of the fan. Can be set to `null` if only the device name is relevant
 	// Default: MQTT Fan
 	Name string `json:"name,omitempty"`
 
@@ -64,7 +88,7 @@ type Fan struct {
 	// Default: `true` if no state topic defined, else `false`.
 	Optimistic bool `json:"optimistic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to generate the payload to send to `oscillation_command_topic`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to generate the payload to send to `oscillation_command_topic`
 	// Default: <no value>
 	OscillationCommandTemplate string `json:"oscillation_command_template,omitempty"`
 
@@ -76,7 +100,7 @@ type Fan struct {
 	// Default: <no value>
 	OscillationStateTopic string `json:"oscillation_state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract a value from the oscillation
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract a value from the oscillation
 	// Default: <no value>
 	OscillationValueTemplate string `json:"oscillation_value_template,omitempty"`
 
@@ -104,15 +128,15 @@ type Fan struct {
 	// Default: oscillate_on
 	PayloadOscillationOn string `json:"payload_oscillation_on,omitempty"`
 
-	// A special payload that resets the `percentage` state attribute to `None` when received at the `percentage_state_topic`
-	// Default: None
+	// A special payload that resets the `percentage` state attribute to `unknown` when received at the `percentage_state_topic`
+	// Default: "None"
 	PayloadResetPercentage string `json:"payload_reset_percentage,omitempty"`
 
-	// A special payload that resets the `preset_mode` state attribute to `None` when received at the `preset_mode_state_topic`
-	// Default: None
+	// A special payload that resets the `preset_mode` state attribute to `unknown` when received at the `preset_mode_state_topic`
+	// Default: "None"
 	PayloadResetPresetMode string `json:"payload_reset_preset_mode,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to generate the payload to send to `percentage_command_topic`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to generate the payload to send to `percentage_command_topic`
 	// Default: <no value>
 	PercentageCommandTemplate string `json:"percentage_command_template,omitempty"`
 
@@ -124,11 +148,15 @@ type Fan struct {
 	// Default: <no value>
 	PercentageStateTopic string `json:"percentage_state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the `percentage` value from the payload received on `percentage_state_topic`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the `percentage` value from the payload received on `percentage_state_topic`
 	// Default: <no value>
 	PercentageValueTemplate string `json:"percentage_value_template,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to generate the payload to send to `preset_mode_command_topic`
+	// Must be `fan`. Only allowed and required in [MQTT auto discovery device messages](/integrations/mqtt/#device-discovery-payload)
+	// Default: <no value>
+	Platform string `json:"platform"`
+
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to generate the payload to send to `preset_mode_command_topic`
 	// Default: <no value>
 	PresetModeCommandTemplate string `json:"preset_mode_command_template,omitempty"`
 
@@ -140,7 +168,7 @@ type Fan struct {
 	// Default: <no value>
 	PresetModeStateTopic string `json:"preset_mode_state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the `preset_mode` value from the payload received on `preset_mode_state_topic`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the `preset_mode` value from the payload received on `preset_mode_state_topic`
 	// Default: <no value>
 	PresetModeValueTemplate string `json:"preset_mode_value_template,omitempty"`
 
@@ -148,7 +176,7 @@ type Fan struct {
 	// Default: []
 	PresetModes string `json:"preset_modes,omitempty"`
 
-	// The maximum QoS level of the state topic
+	// The maximum QoS level to be used when receiving and publishing messages
 	// Default: 0
 	Qos int `json:"qos,omitempty"`
 
@@ -164,15 +192,15 @@ type Fan struct {
 	// Default: 1
 	SpeedRangeMin int `json:"speed_range_min,omitempty"`
 
-	// The MQTT topic subscribed to receive state updates
+	// The MQTT topic subscribed to receive state updates. A "None" payload resets to an `unknown` state. An empty payload is ignored. By default, valid state payloads are `OFF` and `ON`. The accepted payloads can be overridden with the `payload_off` and `payload_on` config options
 	// Default: <no value>
 	StateTopic string `json:"state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract a value from the state
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract a value from the state
 	// Default: <no value>
 	StateValueTemplate string `json:"state_value_template,omitempty"`
 
-	// An ID that uniquely identifies this fan. If two fans have the same unique ID, Home Assistant will raise an exception
+	// An ID that uniquely identifies this fan. If two fans have the same unique ID, Home Assistant will raise an exception. Required when used with device-based discovery
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
 }

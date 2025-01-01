@@ -12,7 +12,7 @@ type AlarmControlPanel struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
 	// Default: <no value>
 	AvailabilityTemplate string `json:"availability_template,omitempty"`
 
@@ -20,7 +20,7 @@ type AlarmControlPanel struct {
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
 
-	// If defined, specifies a code to enable or disable the alarm in the frontend. Note that the code is validated locally and blocks sending MQTT messages to the remote device. For remote code validation, the code can be configured to either of the special values `REMOTE_CODE` (numeric code) or `REMOTE_CODE_TEXT` (text code). In this case, local code validation is bypassed but the frontend will still show a numeric or text code dialog. Use `command_template` to send the code to the remote device. Example configurations for remote code validation [can be found here](./#configurations-with-remote-code-validation)
+	// If defined, specifies a code to enable or disable the alarm in the frontend. Note that the code is validated locally and blocks sending MQTT messages to the remote device. For remote code validation, the code can be configured to either of the special values `REMOTE_CODE` (numeric code) or `REMOTE_CODE_TEXT` (text code). In this case, local code validation is bypassed but the frontend will still show a numeric or text code dialog. Use `command_template` to send the code to the remote device. Example configurations for remote code validation [can be found here](#configurations-with-remote-code-validation)
 	// Default: <no value>
 	Code string `json:"code,omitempty"`
 
@@ -36,7 +36,7 @@ type AlarmControlPanel struct {
 	// Default: true
 	CodeTriggerRequired bool `json:"code_trigger_required,omitempty"`
 
-	// The [template](/docs/configuration/templating/#processing-incoming-data) used for the command payload. Available variables: `action` and `code`
+	// The [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) used for the command payload. Available variables: `action` and `code`
 	// Default: action
 	CommandTemplate string `json:"command_template,omitempty"`
 
@@ -44,7 +44,7 @@ type AlarmControlPanel struct {
 	// Default: <no value>
 	CommandTopic string `json:"command_topic"`
 
-	// Information about the device this alarm panel is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works through [MQTT discovery](/docs/mqtt/discovery/) and when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
+	// Information about the device this alarm panel is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
 	// Default: <no value>
 	Device *Device `json:"device,omitempty"`
 
@@ -52,15 +52,23 @@ type AlarmControlPanel struct {
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
 
+	// The encoding of the payloads received and published messages. Set to `""` to disable decoding of incoming payload
+	// Default: utf-8
+	Encoding string `json:"encoding,omitempty"`
+
 	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
-	// Default: None
+	// Default: <no value>
 	EntityCategory string `json:"entity_category,omitempty"`
+
+	// Picture URL for the entity
+	// Default: <no value>
+	EntityPicture string `json:"entity_picture,omitempty"`
 
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
 	Icon string `json:"icon,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
 	// Default: <no value>
 	JsonAttributesTemplate string `json:"json_attributes_template,omitempty"`
 
@@ -68,7 +76,7 @@ type AlarmControlPanel struct {
 	// Default: <no value>
 	JsonAttributesTopic string `json:"json_attributes_topic,omitempty"`
 
-	// The name of the alarm
+	// The name of the alarm. Can be set to `null` if only the device name is relevant
 	// Default: MQTT Alarm
 	Name string `json:"name,omitempty"`
 
@@ -112,7 +120,11 @@ type AlarmControlPanel struct {
 	// Default: TRIGGER
 	PayloadTrigger string `json:"payload_trigger,omitempty"`
 
-	// The maximum QoS level of the state topic
+	// Must be `alarm_control_panel`. Only allowed and required in [MQTT auto discovery device messages](/integrations/mqtt/#device-discovery-payload)
+	// Default: <no value>
+	Platform string `json:"platform"`
+
+	// The maximum QoS level to be used when receiving and publishing messages
 	// Default: 0
 	Qos int `json:"qos,omitempty"`
 
@@ -120,15 +132,19 @@ type AlarmControlPanel struct {
 	// Default: false
 	Retain bool `json:"retain,omitempty"`
 
-	// The MQTT topic subscribed to receive state updates
+	// The MQTT topic subscribed to receive state updates. A "None" payload resets to an `unknown` state. An empty payload is ignored. Valid state payloads are: `armed_away`, `armed_custom_bypass`, `armed_home`, `armed_night`, `armed_vacation`, `arming`, `disarmed`, `disarming` `pending` and `triggered`
 	// Default: <no value>
 	StateTopic string `json:"state_topic"`
 
-	// An ID that uniquely identifies this alarm panel. If two alarm panels have the same unique ID, Home Assistant will raise an exception
+	// A list of features that the alarm control panel supports. The available list options are `arm_home`, `arm_away`, `arm_night`, `arm_vacation`, `arm_custom_bypass`, and `trigger`
+	// Default: [arm_home arm_away arm_night arm_vacation arm_custom_bypass trigger]
+	SupportedFeatures string `json:"supported_features,omitempty"`
+
+	// An ID that uniquely identifies this alarm panel. If two alarm panels have the same unique ID, Home Assistant will raise an exception. Required when used with device-based discovery
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the value
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the value
 	// Default: <no value>
 	ValueTemplate string `json:"value_template,omitempty"`
 }

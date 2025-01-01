@@ -12,7 +12,7 @@ type Tag struct {
 	// Default: <no value>
 	Topic string `json:"topic"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) that returns a tag ID
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) that returns a tag ID
 	// Default: <no value>
 	ValueTemplate string `json:"value_template,omitempty"`
 }

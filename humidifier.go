@@ -4,6 +4,14 @@ import "fmt"
 
 type Humidifier struct {
 
+	// A template to render the value received on the `action_topic` with
+	// Default: <no value>
+	ActionTemplate string `json:"action_template,omitempty"`
+
+	// The MQTT topic to subscribe for changes of the current action. Valid values: `off`, `humidifying`, `drying`, `idle
+	// Default: <no value>
+	ActionTopic string `json:"action_topic,omitempty"`
+
 	// A list of MQTT topics subscribed to receive availability (online/offline) updates. Must not be used together with `availability_topic`
 	// Default: <no value>
 	Availability []Availability `json:"availability,omitempty"`
@@ -12,7 +20,7 @@ type Humidifier struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
 	// Default: <no value>
 	AvailabilityTemplate string `json:"availability_template,omitempty"`
 
@@ -20,7 +28,7 @@ type Humidifier struct {
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to generate the payload to send to `command_topic`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to generate the payload to send to `command_topic`
 	// Default: <no value>
 	CommandTemplate string `json:"command_template,omitempty"`
 
@@ -28,11 +36,19 @@ type Humidifier struct {
 	// Default: <no value>
 	CommandTopic string `json:"command_topic"`
 
-	// Information about the device this humidifier is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works through [MQTT discovery](/docs/mqtt/discovery/) and when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
+	// A template with which the value received on `current_humidity_topic` will be rendered
+	// Default: <no value>
+	CurrentHumidityTemplate string `json:"current_humidity_template,omitempty"`
+
+	// The MQTT topic on which to listen for the current humidity. A `"None"` value received will reset the current humidity. Empty values (`'''`) will be ignored
+	// Default: <no value>
+	CurrentHumidityTopic string `json:"current_humidity_topic,omitempty"`
+
+	// Information about the device this humidifier is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
 	// Default: <no value>
 	Device *Device `json:"device,omitempty"`
 
-	// The device class of the MQTT device. Must be either `humidifier` or `dehumidifier`
+	// The device class of the MQTT device. Must be either `humidifier`, `dehumidifier` or `null`
 	// Default: humidifier
 	DeviceClass string `json:"device_class,omitempty"`
 
@@ -40,15 +56,23 @@ type Humidifier struct {
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
 
+	// The encoding of the payloads received and published messages. Set to `""` to disable decoding of incoming payload
+	// Default: utf-8
+	Encoding string `json:"encoding,omitempty"`
+
 	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
-	// Default: None
+	// Default: <no value>
 	EntityCategory string `json:"entity_category,omitempty"`
+
+	// Picture URL for the entity
+	// Default: <no value>
+	EntityPicture string `json:"entity_picture,omitempty"`
 
 	// [Icon](/docs/configuration/customizing-devices/#icon) for the entity
 	// Default: <no value>
 	Icon string `json:"icon,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
 	// Default: <no value>
 	JsonAttributesTemplate string `json:"json_attributes_template,omitempty"`
 
@@ -58,13 +82,13 @@ type Humidifier struct {
 
 	// The minimum target humidity percentage that can be set
 	// Default: 100
-	MaxHumidity int `json:"max_humidity,omitempty"`
+	MaxHumidity string `json:"max_humidity,omitempty"`
 
 	// The maximum target humidity percentage that can be set
 	// Default: 0
-	MinHumidity int `json:"min_humidity,omitempty"`
+	MinHumidity string `json:"min_humidity,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to generate the payload to send to `mode_command_topic`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to generate the payload to send to `mode_command_topic`
 	// Default: <no value>
 	ModeCommandTemplate string `json:"mode_command_template,omitempty"`
 
@@ -72,7 +96,7 @@ type Humidifier struct {
 	// Default: <no value>
 	ModeCommandTopic string `json:"mode_command_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract a value for the humidifier `mode` state
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract a value for the humidifier `mode` state
 	// Default: <no value>
 	ModeStateTemplate string `json:"mode_state_template,omitempty"`
 
@@ -84,7 +108,7 @@ type Humidifier struct {
 	// Default: []
 	Modes string `json:"modes,omitempty"`
 
-	// The name of the humidifier
+	// The name of the humidifier. Can be set to `null` if only the device name is relevant
 	// Default: MQTT humidifier
 	Name string `json:"name,omitempty"`
 
@@ -112,15 +136,19 @@ type Humidifier struct {
 	// Default: ON
 	PayloadOn string `json:"payload_on,omitempty"`
 
-	// A special payload that resets the `target_humidity` state attribute to `None` when received at the `target_humidity_state_topic`
-	// Default: None
+	// A special payload that resets the `target_humidity` state attribute to an `unknown` state when received at the `target_humidity_state_topic`. When received at `current_humidity_topic` it will reset the current humidity state
+	// Default: "None"
 	PayloadResetHumidity string `json:"payload_reset_humidity,omitempty"`
 
-	// A special payload that resets the `mode` state attribute to `None` when received at the `mode_state_topic`
-	// Default: None
+	// A special payload that resets the `mode` state attribute to an `unknown` state when received at the `mode_state_topic`
+	// Default: "None"
 	PayloadResetMode string `json:"payload_reset_mode,omitempty"`
 
-	// The maximum QoS level of the state topic
+	// Must be `humidifier`. Only allowed and required in [MQTT auto discovery device messages](/integrations/mqtt/#device-discovery-payload)
+	// Default: <no value>
+	Platform string `json:"platform"`
+
+	// The maximum QoS level to be used when receiving and publishing messages
 	// Default: 0
 	Qos int `json:"qos,omitempty"`
 
@@ -128,15 +156,15 @@ type Humidifier struct {
 	// Default: true
 	Retain bool `json:"retain,omitempty"`
 
-	// The MQTT topic subscribed to receive state updates
+	// The MQTT topic subscribed to receive state updates. A "None" payload resets to an `unknown` state. An empty payload is ignored. Valid state payloads are `OFF` and `ON`. Custom `OFF` and `ON` values can be set with the `payload_off` and `payload_on` config options
 	// Default: <no value>
 	StateTopic string `json:"state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract a value from the state
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract a value from the state
 	// Default: <no value>
 	StateValueTemplate string `json:"state_value_template,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to generate the payload to send to `target_humidity_command_topic`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to generate the payload to send to `target_humidity_command_topic`
 	// Default: <no value>
 	TargetHumidityCommandTemplate string `json:"target_humidity_command_template,omitempty"`
 
@@ -144,7 +172,7 @@ type Humidifier struct {
 	// Default: <no value>
 	TargetHumidityCommandTopic string `json:"target_humidity_command_topic"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract a value for the humidifier `target_humidity` state
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract a value for the humidifier `target_humidity` state
 	// Default: <no value>
 	TargetHumidityStateTemplate string `json:"target_humidity_state_template,omitempty"`
 
@@ -152,7 +180,7 @@ type Humidifier struct {
 	// Default: <no value>
 	TargetHumidityStateTopic string `json:"target_humidity_state_topic,omitempty"`
 
-	// An ID that uniquely identifies this humidifier. If two humidifiers have the same unique ID, Home Assistant will raise an exception
+	// An ID that uniquely identifies this humidifier. If two humidifiers have the same unique ID, Home Assistant will raise an exception. Required when used with device-based discovery
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
 }

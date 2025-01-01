@@ -12,13 +12,17 @@ type Light struct {
 	// Default: latest
 	AvailabilityMode string `json:"availability_mode,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract device's availability from the `availability_topic`. To determine the devices's availability result of this template will be compared to `payload_available` and `payload_not_available`
 	// Default: <no value>
 	AvailabilityTemplate string `json:"availability_template,omitempty"`
 
 	// The MQTT topic subscribed to receive availability (online/offline) updates. Must not be used together with `availability`
 	// Default: <no value>
 	AvailabilityTopic string `json:"availability_topic,omitempty"`
+
+	// Defines a [template](/docs/configuration/templating/) to compose message which will be sent to `brightness_command_topic`. Available variables: `value`
+	// Default: <no value>
+	BrightnessCommandTemplate string `json:"brightness_command_template,omitempty"`
 
 	// The MQTT topic to publish commands to change the light’s brightness
 	// Default: <no value>
@@ -32,7 +36,7 @@ type Light struct {
 	// Default: <no value>
 	BrightnessStateTopic string `json:"brightness_state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the brightness value
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the brightness value
 	// Default: <no value>
 	BrightnessValueTemplate string `json:"brightness_value_template,omitempty"`
 
@@ -40,7 +44,7 @@ type Light struct {
 	// Default: <no value>
 	ColorModeStateTopic string `json:"color_mode_state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the color mode
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the color mode
 	// Default: <no value>
 	ColorModeValueTemplate string `json:"color_mode_value_template,omitempty"`
 
@@ -56,7 +60,7 @@ type Light struct {
 	// Default: <no value>
 	ColorTempStateTopic string `json:"color_temp_state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the color temperature value
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the color temperature value
 	// Default: <no value>
 	ColorTempValueTemplate string `json:"color_temp_value_template,omitempty"`
 
@@ -64,9 +68,13 @@ type Light struct {
 	// Default: <no value>
 	CommandTopic string `json:"command_topic"`
 
-	// Information about the device this light is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works through [MQTT discovery](/docs/mqtt/discovery/) and when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
+	// Information about the device this light is a part of to tie it into the [device registry](https://developers.home-assistant.io/docs/en/device_registry_index.html). Only works when [`unique_id`](#unique_id) is set. At least one of identifiers or connections must be present to identify the device
 	// Default: <no value>
 	Device *Device `json:"device,omitempty"`
+
+	// Defines a [template](/docs/configuration/templating/) to compose message which will be sent to `effect_command_topic`. Available variables: `value`
+	// Default: <no value>
+	EffectCommandTemplate string `json:"effect_command_template,omitempty"`
 
 	// The MQTT topic to publish commands to change the light's effect state
 	// Default: <no value>
@@ -80,7 +88,7 @@ type Light struct {
 	// Default: <no value>
 	EffectStateTopic string `json:"effect_state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the effect value
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the effect value
 	// Default: <no value>
 	EffectValueTemplate string `json:"effect_value_template,omitempty"`
 
@@ -88,19 +96,31 @@ type Light struct {
 	// Default: true
 	EnabledByDefault bool `json:"enabled_by_default,omitempty"`
 
+	// The encoding of the payloads received and published messages. Set to `""` to disable decoding of incoming payload
+	// Default: utf-8
+	Encoding string `json:"encoding,omitempty"`
+
 	// The [category](https://developers.home-assistant.io/docs/core/entity#generic-properties) of the entity
-	// Default: None
+	// Default: <no value>
 	EntityCategory string `json:"entity_category,omitempty"`
+
+	// Picture URL for the entity
+	// Default: <no value>
+	EntityPicture string `json:"entity_picture,omitempty"`
+
+	// Defines a [template](/docs/configuration/templating/) to compose message which will be sent to `hs_command_topic`. Available variables: `hue` and `sat`
+	// Default: <no value>
+	HsCommandTemplate string `json:"hs_command_template,omitempty"`
 
 	// The MQTT topic to publish commands to change the light's color state in HS format (Hue Saturation). Range for Hue: 0° .. 360°, Range of Saturation: 0..100. Note: Brightness is sent separately in the `brightness_command_topic`
 	// Default: <no value>
 	HsCommandTopic string `json:"hs_command_topic,omitempty"`
 
-	// The MQTT topic subscribed to receive color state updates in HS format. Note: Brightness is received separately in the `brightness_state_topic`
+	// The MQTT topic subscribed to receive color state updates in HS format. The expected payload is the hue and saturation values separated by commas, for example, `359.5,100.0`. Note: Brightness is received separately in the `brightness_state_topic`
 	// Default: <no value>
 	HsStateTopic string `json:"hs_state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the HS value
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the HS value
 	// Default: <no value>
 	HsValueTemplate string `json:"hs_value_template,omitempty"`
 
@@ -108,7 +128,7 @@ type Light struct {
 	// Default: <no value>
 	Icon string `json:"icon,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the JSON dictionary from messages received on the `json_attributes_topic`. Usage example can be found in [MQTT sensor](/integrations/sensor.mqtt/#json-attributes-template-configuration) documentation
 	// Default: <no value>
 	JsonAttributesTemplate string `json:"json_attributes_template,omitempty"`
 
@@ -124,7 +144,7 @@ type Light struct {
 	// Default: <no value>
 	MinMireds int `json:"min_mireds,omitempty"`
 
-	// The name of the light
+	// The name of the light. Can be set to `null` if only the device name is relevant
 	// Default: MQTT Light
 	Name string `json:"name,omitempty"`
 
@@ -156,7 +176,11 @@ type Light struct {
 	// Default: ON
 	PayloadOn string `json:"payload_on,omitempty"`
 
-	// The maximum QoS level of the state topic
+	// Must be `light`. Only allowed and required in [MQTT auto discovery device messages](/integrations/mqtt/#device-discovery-payload)
+	// Default: <no value>
+	Platform string `json:"platform"`
+
+	// The maximum QoS level to be used when receiving and publishing messages
 	// Default: 0
 	Qos int `json:"qos,omitempty"`
 
@@ -168,31 +192,63 @@ type Light struct {
 	// Default: <no value>
 	RgbCommandTemplate string `json:"rgb_command_template,omitempty"`
 
-	// The MQTT topic to publish commands to change the light's RGB state. Please note that the color value sent by Home Assistant is normalized to full brightness if `brightness_command_topic` is set. Brightness information is in this case sent separately in the `brightness_command_topic`. This will cause a light that expects an absolute color value (including brightness) to flicker
+	// The MQTT topic to publish commands to change the light's RGB state
 	// Default: <no value>
 	RgbCommandTopic string `json:"rgb_command_topic,omitempty"`
 
-	// The MQTT topic subscribed to receive RGB state updates. The expected payload is the RGB values separated by commas, for example, `255,0,127`. Please note that the color value received by Home Assistant is normalized to full brightness. Brightness information is received separately in the `brightness_state_topic`
+	// The MQTT topic subscribed to receive RGB state updates. The expected payload is the RGB values separated by commas, for example, `255,0,127`
 	// Default: <no value>
 	RgbStateTopic string `json:"rgb_state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the RGB value
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the RGB value
 	// Default: <no value>
 	RgbValueTemplate string `json:"rgb_value_template,omitempty"`
 
-	// The schema to use. Must be `default` or omitted to select the default schema"
+	// Defines a [template](/docs/configuration/templating/) to compose message which will be sent to `rgbw_command_topic`. Available variables: `red`, `green`, `blue` and `white`
+	// Default: <no value>
+	RgbwCommandTemplate string `json:"rgbw_command_template,omitempty"`
+
+	// The MQTT topic to publish commands to change the light's RGBW state
+	// Default: <no value>
+	RgbwCommandTopic string `json:"rgbw_command_topic,omitempty"`
+
+	// The MQTT topic subscribed to receive RGBW state updates. The expected payload is the RGBW values separated by commas, for example, `255,0,127,64`
+	// Default: <no value>
+	RgbwStateTopic string `json:"rgbw_state_topic,omitempty"`
+
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the RGBW value
+	// Default: <no value>
+	RgbwValueTemplate string `json:"rgbw_value_template,omitempty"`
+
+	// Defines a [template](/docs/configuration/templating/) to compose message which will be sent to `rgbww_command_topic`. Available variables: `red`, `green`, `blue`, `cold_white` and `warm_white`
+	// Default: <no value>
+	RgbwwCommandTemplate string `json:"rgbww_command_template,omitempty"`
+
+	// The MQTT topic to publish commands to change the light's RGBWW state
+	// Default: <no value>
+	RgbwwCommandTopic string `json:"rgbww_command_topic,omitempty"`
+
+	// The MQTT topic subscribed to receive RGBWW state updates. The expected payload is the RGBWW values separated by commas, for example, `255,0,127,64,32`
+	// Default: <no value>
+	RgbwwStateTopic string `json:"rgbww_state_topic,omitempty"`
+
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the RGBWW value
+	// Default: <no value>
+	RgbwwValueTemplate string `json:"rgbww_value_template,omitempty"`
+
+	// The schema to use. Must be `default` or omitted to select the default schema
 	// Default: default
 	Schema string `json:"schema,omitempty"`
 
-	// The MQTT topic subscribed to receive state updates
+	// The MQTT topic subscribed to receive state updates. A "None" payload resets to an `unknown` state. An empty payload is ignored. By default, valid state payloads are `OFF` and `ON`. The accepted payloads can be overridden with the `payload_off` and `payload_on` config options
 	// Default: <no value>
 	StateTopic string `json:"state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the state value. The template should match the payload `on` and `off` values, so if your light uses `power on` to turn on, your `state_value_template` string should return `power on` when the switch is on. For example if the message is just `on`, your `state_value_template` should be `power {{ value }}`
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the state value. The template should return the `payload_on` and `payload_off` values, so if your light uses `power on` to turn on, your `state_value_template` string should return `power on` when the switch is on. For example, if the message is just `on`, your `state_value_template` should be `power {{ value }}`. When your `payload_on = 27` and `payload_off = 'off'`, then this template might be `'off' if value_json.my_custom_brightness_field <= 0 else 27`
 	// Default: <no value>
 	StateValueTemplate string `json:"state_value_template,omitempty"`
 
-	// An ID that uniquely identifies this light. If two lights have the same unique ID, Home Assistant will raise an exception
+	// An ID that uniquely identifies this light. If two lights have the same unique ID, Home Assistant will raise an exception. Required when used with device-based discovery
 	// Default: <no value>
 	UniqueId string `json:"unique_id,omitempty"`
 
@@ -204,15 +260,19 @@ type Light struct {
 	// Default: 255
 	WhiteScale int `json:"white_scale,omitempty"`
 
+	// Defines a [template](/docs/configuration/templating/) to compose message which will be sent to `xy_command_topic`. Available variables: `x` and `y`
+	// Default: <no value>
+	XyCommandTemplate string `json:"xy_command_template,omitempty"`
+
 	// The MQTT topic to publish commands to change the light's XY state
 	// Default: <no value>
 	XyCommandTopic string `json:"xy_command_topic,omitempty"`
 
-	// The MQTT topic subscribed to receive XY state updates
+	// The MQTT topic subscribed to receive XY state updates. The expected payload is the X and Y color values separated by commas, for example, `0.675,0.322`
 	// Default: <no value>
 	XyStateTopic string `json:"xy_state_topic,omitempty"`
 
-	// Defines a [template](/docs/configuration/templating/#processing-incoming-data) to extract the XY value
+	// Defines a [template](/docs/configuration/templating/#using-templates-with-the-mqtt-integration) to extract the XY value
 	// Default: <no value>
 	XyValueTemplate string `json:"xy_value_template,omitempty"`
 }
